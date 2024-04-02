@@ -91,7 +91,9 @@ function getRandom(min,max){
 
 function upsetArr(arr){
     arr.sort(() => Math.random() - 0.5);
-    arr.sort(() => Math.random() - 0.5);
-    arr.sort(() => Math.random() - 0.5);
+    arr.sort(() => Math.random() - 0.4);
+    arr.sort(() => Math.random() - 0.3);
+    arr.sort(() => Math.random() - 0.2);
+    arr.sort(() => Math.random() - 0.1);
     return arr;
 }
