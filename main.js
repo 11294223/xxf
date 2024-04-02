@@ -1,0 +1,97 @@
+function xxf20_init() {
+    let baseArr = [
+        [100, 50, 50, 40, 40, 20, 20],
+        [100, 50, 50, 40, 20, 20],
+        [100, 50, 40, 20, 20, 20, 20],
+        [100, 50, 40, 40, 20, 20, 20],
+        [50, 50, 40, 40, 20, 20, 20, 20, 20],
+        [50, 50, 40, 40, 40, 20, 20, 20],
+        [50, 40, 40, 40, 20, 20, 20, 20, 20],
+        [50, 40, 40, 20, 20, 20, 20, 20, 20, 20],
+        [100, 50, 20, 20, 20, 20, 20, 20, 20],
+        [50, 40, 40, 30, 20, 20, 20, 20, 20, 20]
+    ];
+    let baseProb = [5, 5, 10, 10, 15, 10, 10, 20, 10, 5];
+
+    let extArr = [1000, 500, 200];
+    let extProd = [10000, 4, 8, 20];
+
+    let topArr = [800000, 5000];
+    let topProb = [2500000, 1, 50];
+
+
+    let basePool = createFullPool(baseProb);
+    let pageBaseArr = baseArr[basePool[getRandom(0,100)]];
+    console.log(pageBaseArr);
+
+    let extPool = createProbPool(extProd);
+    let extNum = getRandom(0,extProd[0]);
+    let extPrice = 0;
+    for (let i = 0; i < extPool.length; i++) {
+        let tmpArr = extPool[i];
+        if (tmpArr.indexOf(extNum) != -1){
+            extPrice = extArr[i];
+            break;
+        }
+    }
+    console.log(extPrice);
+
+    let topPool = createProbPool(topProb);
+    let topNum = getRandom(0,topProb[0]);
+    let topPrice = 0;
+    for (let i = 0; i < topPool.length; i++) {
+        let tmpArr = topPool[i];
+        if (tmpArr.indexOf(topNum) != -1){
+            topPrice = topArr[i];
+            break;
+        }
+    }
+    console.log(topPrice);
+
+    let page = 25;
+    let pageArr = Array.from(pageBaseArr);
+    for (let i = 0; i < page - pageBaseArr.length; i++) {
+        pageArr.push(0);
+    }
+    console.log(pageArr);
+    pageArr = upsetArr(pageArr);
+
+
+
+
+}
+
+function createFullPool(probArr) {
+    let pool = [];
+    for (let i = 0; i < probArr.length; i++) {
+        for (let j = 0; j < probArr[i]; j++) {
+            pool.push(i);
+        }
+    }
+    pool = upsetArr(pool);
+    return pool;
+}
+
+function createProbPool(probArr){
+    let pool = [];
+    for (let i = 1; i < probArr.length; i++) {
+        let tmpArr = [];
+        for (let j = 0; j < probArr[i]; j++) {
+            tmpArr.push(getRandom(0,probArr[0]));
+        }
+        pool.push(tmpArr);
+    }
+    return pool;
+}
+
+function getRandom(min,max){
+    let tmp = Math.random() * (max - min) + min
+    return parseInt(tmp);
+}
+
+function upsetArr(arr){
+    arr.sort(() => Math.random() - 0.5);
+    arr.sort(() => Math.random() - 0.5);
+    arr.sort(() => Math.random() - 0.5);
+    return arr;
+}
