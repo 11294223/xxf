@@ -1,53 +1,23 @@
-######################################################################
-# Build Tools
+.DS_Store
+node_modules
+/dist
 
-.gradle
-/build/
-!gradle/wrapper/gradle-wrapper.jar
 
-target/
-!.mvn/wrapper/maven-wrapper.jar
+# local env files
+.env.local
+.env.*.local
 
-######################################################################
-# IDE
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-
-### IntelliJ IDEA ###
+# Editor directories and files
 .idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
-nbproject/private/
-build/*
-nbbuild/
-dist/
-nbdist/
-.nb-gradle/
-
-######################################################################
-# Others
-*.log
-*.xml.versionsBackup
-*.swp
-
-!*/build/*.java
-!*/build/*.html
-!*/build/*.xml
-
-##### 全路径排除本地log目录，nacos额外目录 #####
-/**/log/
-/**/logs/
-/**/meta-data/
-/**/nacos/data
-raone-onestop/raone-onestop-base/raone-onestop-base-server/src/main/resources/bootstrap-copy.yml
-############忽略自测模块############################
-/**/raone-externaldata/raone-externaldata-taike-client
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
