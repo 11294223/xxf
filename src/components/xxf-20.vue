@@ -11,6 +11,8 @@
 <script>
 import {pinyin} from "pinyin-pro";
 import baseData from "@/js/data";
+import {fillTextWithSpacing} from '@/utils/canvasUtils'
+import {createFullPool, createProbPool, numberToChinese, getRandom, upsetArr, munSplit} from '@/utils/CommonUtils'
 
 export default {
   name: 'Xxf-20',
@@ -22,7 +24,15 @@ export default {
       playHeight: 285,
       playX: 65,
       playY: 311,
-      munArr: ['800,000', '5,000', '1,000', 500, 200, 100, 50, 40, 30, 20],
+      munArr: [800000, 5000, 1000, 500, 200, 100, 50, 40, 30, 20],
+      munSplitArr: {
+        mun40: [20, 20],
+        mun50: [20, 30],
+        mun100: [50, 50],
+        mun200: [100, 100],
+        mun500: [200, 200, 100],
+        mun1000: [500, 500]
+      }, // 金额拆分数组
       pageNum: 25, // 页数
       currentPage: 0, // 当前页
       chanceNum: 25, // 中奖机会
@@ -31,6 +41,7 @@ export default {
     }
   },
   created() {
+    console.log('====' + munSplit(100, this.munSplitArr, this.chanceNum))
     this.dataInit();
   },
   mounted() {
@@ -59,17 +70,17 @@ export default {
       munPYCtx.textAlign = "center";
 
       //加载等高线
-      let dgxIndex = this.getRandom(0, 4);
+      let dgxIndex = getRandom(0, 4);
       dgxCtx.globalAlpha = 0.3;
       let gdxImg = new Image();
       gdxImg.src = require('@/assets/dgx' + dgxIndex + '.png'); // 等高线
       gdxImg.onload = () => {
-        dgxCtx.drawImage(gdxImg, this.playX, this.playY, this.playWidth, this.playHeight);
+        // dgxCtx.drawImage(gdxImg, this.playX, this.playY, this.playWidth, this.playHeight);
       };
 
       // 加载刮奖层
       let playImg = new Image();
-      playImg.src = require('@/assets/xxf-20-play.png'); // 上层图片路径
+      playImg.src = require('@/assets/xxf-20-play.png');
       playImg.onload = () => {
         // topCtx.drawImage(playImg, this.playX, this.playY, this.playWidth, this.playHeight);
       };
@@ -78,32 +89,39 @@ export default {
       let bottomImage = new Image();
       bottomImage.src = require('@/assets/xxf_20.jpg'); // 底层图片路径
       bottomImage.onload = () => {
-        bottomCtx.drawImage(bottomImage, 0, 0, this.width, this.height);
+        // bottomCtx.drawImage(bottomImage, 0, 0, this.width, this.height);
 
-        //加载背景
+        //加载灰色背景
         let bgImg = new Image();
-        bgImg.src = require('@/assets/xxf-20-bg.png'); // 等高线
+        bgImg.src = require('@/assets/xxf-20-bg.png');
         bgImg.onload = () => {
-          bottomCtx.drawImage(bgImg, this.playX, this.playY, this.playWidth, this.playHeight);
+          // bottomCtx.drawImage(bgImg, this.playX, this.playY, this.playWidth, this.playHeight);
         };
 
         // 生成当前页的奖金数组
-        let currentMunArr = []
+        let tmpMunArr = Array.from(this.munArr);
+        let currentMunArr = [];
         let munIndex = -1;
         if (this.pageArr[this.currentPage] != 0) {
-          munIndex = this.getRandom(0, this.chanceNum)
+          munIndex = getRandom(0, this.chanceNum)
           currentMunArr[munIndex] = this.pageArr[this.currentPage];
         }
         for (let i = 0; i < this.chanceNum; i++) {
           if (i == munIndex) {
             continue;
           }
-          currentMunArr[i] = this.munArr[this.getRandom(0, this.munArr.length)];
+          let tmpMun = tmpMunArr[getRandom(0, tmpMunArr.length)];
+          currentMunArr[i] = tmpMun;
+          let tmpMunIndex = tmpMunArr.indexOf(tmpMun);
+          //去除出现过的额外奖金
+          if (tmpMun >= 200) {
+            tmpMunArr.splice(tmpMunIndex, 1);
+          }
         }
 
 
         //生成当前页的图标数组
-        this.iconIndexArr = this.upsetArr(this.iconIndexArr);
+        this.iconIndexArr = upsetArr(this.iconIndexArr);
         let tmpIconIndexArr = [];
         for (let i = 0; i < this.chanceNum; i++) {
           if (i == munIndex) {
@@ -129,13 +147,18 @@ export default {
             xi = 0;
           }
           iconImgArr[i].onload = () => {
-            bottomCtx.drawImage(iconImgArr[i], this.playX + 10 + xi * 53, this.playY + 5 + yi * 55, 35, 35);
-            munCtx.fillText("¥" + currentMunArr[i], this.playX + 28.5 + xi * 53, this.playY + 4 + 1 * 35 + yi * 55);
-            // munCtx.letterSpacingText("¥" + currentMunArr[i], this.playX + 28.5 + xi * 53, this.playY + 4 + 1 * 35 + yi * 55, -1);
-            let mun = currentMunArr[i].toString();
-            mun = mun.replaceAll(",", "");
-            munPYCtx.fillText(pinyin(this.numberToChinese(mun), {toneType: 'none'}).replaceAll(" ", "").toUpperCase(),
-                this.playX + 28.5 + xi * 53, this.playY + 4 + 1 * 48 + yi * 55);
+            // bottomCtx.drawImage(iconImgArr[i], this.playX + 10 + xi * 53, this.playY + 5 + yi * 55, 35, 35);
+            let mun = currentMunArr[i];
+            if (mun == 800000) {
+              mun = '800,000';
+            } else if (mun == 5000) {
+              mun = '5,000';
+            } else if (mun == 1000) {
+              mun = '1,000';
+            }
+            fillTextWithSpacing(munCtx, "¥" + mun, this.playX + 28.5 + xi * 53, this.playY + 4 + 1 * 35 + yi * 55, -1);
+            fillTextWithSpacing(munPYCtx, pinyin(numberToChinese(currentMunArr[i]), {toneType: 'none'}).replaceAll(" ", "").toUpperCase(),
+                this.playX + 28.5 + xi * 53, this.playY + 4 + 1 * 48 + yi * 55, -0.5);
           }
         }
 
@@ -189,12 +212,12 @@ export default {
       let topProb = [2500000, 1, 50];
 
 
-      let basePool = this.createFullPool(baseProb);
-      let pageBaseArr = baseArr[basePool[this.getRandom(0, 100)]];
+      let basePool = createFullPool(baseProb);
+      let pageBaseArr = baseArr[basePool[getRandom(0, 100)]];
       console.log(pageBaseArr);
 
-      let extPool = this.createProbPool(extProd);
-      let extNum = this.getRandom(0, extProd[0]);
+      let extPool = createProbPool(extProd);
+      let extNum = getRandom(0, extProd[0]);
       let extPrice = 0;
       for (let i = 0; i < extPool.length; i++) {
         let tmpArr = extPool[i];
@@ -205,8 +228,8 @@ export default {
       }
       console.log(extPrice);
 
-      let topPool = this.createProbPool(topProb);
-      let topNum = this.getRandom(0, topProb[0]);
+      let topPool = createProbPool(topProb);
+      let topNum = getRandom(0, topProb[0]);
       let topPrice = 0;
       for (let i = 0; i < topPool.length; i++) {
         let tmpArr = topPool[i];
@@ -228,82 +251,14 @@ export default {
         this.pageArr.push(0);
       }
       console.log(this.pageArr);
-      this.pageArr = this.upsetArr(this.pageArr);
+      this.pageArr = upsetArr(this.pageArr);
 
       //随机出icon下标数组
       for (let i = 1; i <= baseData.data().iconNum; i++) {
         this.iconIndexArr.push(i);
       }
-      this.iconIndexArr = this.upsetArr(this.iconIndexArr);
+      this.iconIndexArr = upsetArr(this.iconIndexArr);
       console.log(this.iconIndexArr);
-    },
-
-    createFullPool(probArr) {
-      let pool = [];
-      for (let i = 0; i < probArr.length; i++) {
-        for (let j = 0; j < probArr[i]; j++) {
-          pool.push(i);
-        }
-      }
-      pool = this.upsetArr(pool);
-      return pool;
-    },
-
-    createProbPool(probArr) {
-      let pool = [];
-      for (let i = 1; i < probArr.length; i++) {
-        let tmpArr = [];
-        for (let j = 0; j < probArr[i]; j++) {
-          tmpArr.push(this.getRandom(0, probArr[0]));
-        }
-        pool.push(tmpArr);
-      }
-      return pool;
-    },
-
-    getRandom(min, max) {
-      let tmp = Math.random() * (max - min) + min
-      return parseInt(tmp);
-    },
-
-    upsetArr(arr) {
-      arr.sort(() => Math.random() - 0.5);
-      arr.sort(() => Math.random() - 0.4);
-      arr.sort(() => Math.random() - 0.3);
-      arr.sort(() => Math.random() - 0.2);
-      arr.sort(() => Math.random() - 0.1);
-      return arr;
-    },
-
-    numberToChinese(num) {
-      const chineseNumbers = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
-      const units = ['', '十', '百', '千', '万'];
-      let numStr = num.toString();
-      let chineseStr = '';
-
-      let flag = false;
-      if (numStr.length > 5 && numStr.length < 9) {
-        flag = true;
-        if (numStr.length > 5) {
-          numStr = numStr.replaceAll("0000", "");
-        }
-      }
-
-      for (let i = 0; i < numStr.length; i++) {
-        let num = Number(numStr[i]);
-        let unit = units[numStr.length - i - 1];
-        if (unit === '千' && num === 0 && chineseStr.slice(-1) !== '千') {
-          chineseStr += '零';
-        }
-        if (num !== 0 || unit === '万') {
-          chineseStr += chineseNumbers[num] + unit;
-        }
-      }
-      chineseStr = chineseStr.replace("万零", '万');
-      if (flag) {
-        chineseStr += "万"
-      }
-      return chineseStr;
     },
 
   }
