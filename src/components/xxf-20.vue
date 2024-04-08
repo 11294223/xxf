@@ -75,27 +75,27 @@ export default {
       let gdxImg = new Image();
       gdxImg.src = require('@/assets/dgx' + dgxIndex + '.png'); // 等高线
       gdxImg.onload = () => {
-        // dgxCtx.drawImage(gdxImg, this.playX, this.playY, this.playWidth, this.playHeight);
+        dgxCtx.drawImage(gdxImg, this.playX, this.playY, this.playWidth, this.playHeight);
       };
 
       // 加载刮奖层
       let playImg = new Image();
       playImg.src = require('@/assets/xxf-20-play.png');
       playImg.onload = () => {
-        // topCtx.drawImage(playImg, this.playX, this.playY, this.playWidth, this.playHeight);
+        topCtx.drawImage(playImg, this.playX, this.playY, this.playWidth, this.playHeight);
       };
 
       // 加载底层图片
       let bottomImage = new Image();
       bottomImage.src = require('@/assets/xxf_20.jpg'); // 底层图片路径
       bottomImage.onload = () => {
-        // bottomCtx.drawImage(bottomImage, 0, 0, this.width, this.height);
+        bottomCtx.drawImage(bottomImage, 0, 0, this.width, this.height);
 
         //加载灰色背景
         let bgImg = new Image();
         bgImg.src = require('@/assets/xxf-20-bg.png');
         bgImg.onload = () => {
-          // bottomCtx.drawImage(bgImg, this.playX, this.playY, this.playWidth, this.playHeight);
+          bottomCtx.drawImage(bgImg, this.playX, this.playY, this.playWidth, this.playHeight);
         };
 
         // 生成当前页的奖金数组
@@ -285,19 +285,5 @@ export default {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-.body {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f0f0f0;
-}
-
-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
 }
 </style>
