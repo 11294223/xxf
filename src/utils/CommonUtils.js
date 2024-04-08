@@ -1,3 +1,8 @@
+/**
+ * 创建100%概率随机池
+ * @param probArr
+ * @returns {*|*[]}
+ */
 export function createFullPool(probArr) {
     let pool = [];
     for (let i = 0; i < probArr.length; i++) {
@@ -9,6 +14,11 @@ export function createFullPool(probArr) {
     return pool;
 }
 
+/**
+ * 创建概率随机池
+ * @param probArr
+ * @returns {*[]}
+ */
 export function createProbPool(probArr) {
     let pool = [];
     for (let i = 1; i < probArr.length; i++) {
@@ -21,11 +31,22 @@ export function createProbPool(probArr) {
     return pool;
 }
 
+/**
+ * 获取一个随机数
+ * @param min
+ * @param max
+ * @returns {number}
+ */
 export function getRandom(min, max) {
     let tmp = Math.random() * (max - min) + min
     return parseInt(tmp);
 }
 
+/**
+ * 打乱数组
+ * @param arr
+ * @returns {*}
+ */
 export function upsetArr(arr) {
     arr.sort(() => Math.random() - 0.5);
     arr.sort(() => Math.random() - 0.4);
@@ -35,6 +56,11 @@ export function upsetArr(arr) {
     return arr;
 }
 
+/**
+ * 将数字变成大写数字例如 1200 -> 一千二百
+ * @param num
+ * @returns {string}
+ */
 export function numberToChinese(num) {
     const chineseNumbers = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
     const units = ['', '十', '百', '千', '万'];
@@ -66,17 +92,24 @@ export function numberToChinese(num) {
     return chineseStr;
 }
 
+/**
+ * 金额分割
+ * @param mun
+ * @param munSplitArr
+ * @param maxNum
+ * @param res
+ * @returns {*[]}
+ */
 export function munSplit(mun, munSplitArr, maxNum, res = []) {
-    if (!(('mun' + mun) in munSplitArr) || res.length == maxNum) {
+    if (!(('mun' + mun) in munSplitArr)) {
+        res.push(mun);
         return res;
     }
     if (getRandom(1, 3) == 1){
         res.push(mun);
         return res;
     }
-    console.log('===' + res)
     let tmpRes = munSplitArr['mun' + mun];
-    console.log('ARR' + munSplitArr['mun' + mun])
     for (let i = 0; i < tmpRes.length; i++) {
         if (('mun' + tmpRes[i]) in munSplitArr) {
             if (res.length + tmpRes.length > maxNum) {

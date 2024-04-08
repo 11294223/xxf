@@ -1,5 +1,6 @@
 <template>
   <div class="body">
+    <el-button>Default</el-button>
     <canvas id="bottomCanvas" :width=width :height=height ref="bottomCanvas"></canvas> <!-- 底层Canvas -->
     <canvas id="dgxCanvas" :width=width :height=height ref="dgxCanvas"></canvas> <!-- 等高线Canvas -->
     <canvas id="munCanvas" :width=width :height=height ref="munCanvas"></canvas> <!-- 钱数Canvas -->
@@ -41,7 +42,6 @@ export default {
     }
   },
   created() {
-    console.log('====' + munSplit(100, this.munSplitArr, this.chanceNum))
     this.dataInit();
   },
   mounted() {
@@ -101,13 +101,22 @@ export default {
         // 生成当前页的奖金数组
         let tmpMunArr = Array.from(this.munArr);
         let currentMunArr = [];
-        let munIndex = -1;
+        let munIndexArr = [];
+        let splitMunArr = [];
         if (this.pageArr[this.currentPage] != 0) {
-          munIndex = getRandom(0, this.chanceNum)
-          currentMunArr[munIndex] = this.pageArr[this.currentPage];
+          splitMunArr = munSplit(this.pageArr[this.currentPage], this.munSplitArr, this.chanceNum);
+          for (let i = 0; i < splitMunArr.length; i++) {
+            let tmpRandom = getRandom(0, this.chanceNum);
+            if (munIndexArr.indexOf(tmpRandom) != -1) {
+              i--;
+              continue;
+            }
+            munIndexArr[i] = tmpRandom;
+            currentMunArr[tmpRandom] = splitMunArr[i];
+          }
         }
         for (let i = 0; i < this.chanceNum; i++) {
-          if (i == munIndex) {
+          if (munIndexArr.indexOf(i) != -1) {
             continue;
           }
           let tmpMun = tmpMunArr[getRandom(0, tmpMunArr.length)];
@@ -119,25 +128,34 @@ export default {
           }
         }
 
-
         //生成当前页的图标数组
         this.iconIndexArr = upsetArr(this.iconIndexArr);
         let tmpIconIndexArr = [];
         for (let i = 0; i < this.chanceNum; i++) {
-          if (i == munIndex) {
-            tmpIconIndexArr[i] = 'xi';
+          if (munIndexArr.indexOf(i) != -1) {
+            //随机是否出现双喜
+            if (getRandom(0, 3) == 2) {
+              tmpIconIndexArr[i] = 'xi2';
+              currentMunArr[i] /= 2;
+            } else {
+              tmpIconIndexArr[i] = 'xi';
+            }
           } else {
             tmpIconIndexArr[i] = this.iconIndexArr[i];
           }
         }
+
         let iconImgArr = [];
         for (let i = 0; i < tmpIconIndexArr.length; i++) {
           let iconImg = new Image();
-          if (tmpIconIndexArr[i] != 'xi') {
-            iconImg.src = require('@/assets/icon/' + tmpIconIndexArr[i] + '.png');
+          if (tmpIconIndexArr[i] == 'xi') {
+            iconImg.src = require('@/assets/xi.png');
+            iconImgArr.push(iconImg);
+          } else if (tmpIconIndexArr[i] == 'xi2') {
+            iconImg.src = require('@/assets/xi2.png');
             iconImgArr.push(iconImg);
           } else {
-            iconImg.src = require('@/assets/xi2.png');
+            iconImg.src = require('@/assets/icon/' + tmpIconIndexArr[i] + '.png');
             iconImgArr.push(iconImg);
           }
         }
@@ -147,7 +165,7 @@ export default {
             xi = 0;
           }
           iconImgArr[i].onload = () => {
-            // bottomCtx.drawImage(iconImgArr[i], this.playX + 10 + xi * 53, this.playY + 5 + yi * 55, 35, 35);
+            bottomCtx.drawImage(iconImgArr[i], this.playX + 10 + xi * 53, this.playY + 5 + yi * 55, 35, 35);
             let mun = currentMunArr[i];
             if (mun == 800000) {
               mun = '800,000';
@@ -166,7 +184,6 @@ export default {
 
 
       let isDown = false;
-
       // 鼠标按下事件
       topCanvas.addEventListener('mousedown', () => {
         isDown = true;
@@ -250,15 +267,14 @@ export default {
       for (let i = 0; i < this.pageNum - pageBaseArr.length; i++) {
         this.pageArr.push(0);
       }
-      console.log(this.pageArr);
       this.pageArr = upsetArr(this.pageArr);
+      console.log(this.pageArr);
 
       //随机出icon下标数组
       for (let i = 1; i <= baseData.data().iconNum; i++) {
         this.iconIndexArr.push(i);
       }
       this.iconIndexArr = upsetArr(this.iconIndexArr);
-      console.log(this.iconIndexArr);
     },
 
   }
