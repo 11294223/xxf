@@ -1,6 +1,5 @@
 <template>
   <div class="body">
-    <el-button>Default</el-button>
     <canvas id="bottomCanvas" :width=width :height=height ref="bottomCanvas"></canvas> <!-- 底层Canvas -->
     <canvas id="dgxCanvas" :width=width :height=height ref="dgxCanvas"></canvas> <!-- 等高线Canvas -->
     <canvas id="munCanvas" :width=width :height=height ref="munCanvas"></canvas> <!-- 钱数Canvas -->
@@ -286,4 +285,5 @@ export default {
   padding: 0;
   box-sizing: border-box;
 }
+
 </style>

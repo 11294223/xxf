@@ -1,55 +1,33 @@
 <template>
   <el-container>
-    <el-aside width="200px">
-
+    <el-aside style="width: 20vw;height: 100vh;">
+      card
     </el-aside>
-    <el-container>
-      <el-header height="100px">
-
-      </el-header>
-      <el-main width="1000px">
-        <xxf20/>
-      </el-main>
-      <el-footer height="100px">
-
-      </el-footer>
-    </el-container>
-    <el-container>
-      <el-aside width="200px">
-
-      </el-aside>
-    </el-container>
+    <el-main style="width: 80vw;height: 100vh;">
+      <el-row>
+        <el-col :span="2" style="height: 100%;">
+          <choiceMenu />
+        </el-col>
+        <el-col :span="22" style="height: 100%;">
+          <router-view />
+        </el-col>
+      </el-row>
+    </el-main>
   </el-container>
 </template>
 
 <script>
-import xxf20 from './components/xxf-20.vue'
-
+import choiceMenu from "@/components/choiceMenu.vue";
 export default {
   name: 'App',
-  components: {
-    xxf20
+  components:{
+    choiceMenu
   }
 }
 </script>
 
-<style>
-
-.el-row {
-  margin-bottom: 20px;
+<style scoped>
+* {
+  margin: 0;
 }
-
-.el-row:last-child {
-  margin-bottom: 0;
-}
-
-.el-col {
-  border-radius: 4px;
-}
-
-.grid-content {
-  border-radius: 4px;
-  min-height: 36px;
-}
-
 </style>
