@@ -19,23 +19,13 @@
       </div>
       <div class="choiceTool">
         <span style="width: 220px;">好运工具：</span>
-        <div class="sliderDiv">
-          <el-image :src="require('@/assets/guadao-1.png')" style="width: 20px;height: 20px;"></el-image>
-          <div style="width: 170px;margin-left: 20px;">
-            <el-slider v-model="guaDaoSize" size="" :marks="guaDao1Marks" :min="5" :step="5"/>
-          </div>
+        <div style="margin-top: 10px;">
+          <el-button :disabled="guadao==1" bg text circle class="el-icon-guadao1" ref="guadao1" @click="guadao1"/>
+          <el-button :disabled="guadao==2" bg text circle class="el-icon-guadao2" @click="guadao2"/>
+          <el-button :disabled="guadao==3" bg text circle class="el-icon-guadao3" @click="guadao3"/>
         </div>
         <div class="sliderDiv">
-          <el-image :src="require('@/assets/guadao-2.png')" style="width: 20px;height: 20px;"></el-image>
-          <div style="width: 170px;margin-left: 20px;">
-            <el-slider v-model="guaDaoSize" size="" :marks="guaDao1Marks" :min="5" :step="5"/>
-          </div>
-        </div>
-        <div class="sliderDiv">
-          <el-image :src="require('@/assets/guadao-3.png')" style="width: 20px;height: 20px;"></el-image>
-          <div style="width: 170px;margin-left: 20px;">
-            <el-slider v-model="guaDaoSize" size="" :marks="guaDao1Marks" :min="5" :step="5"/>
-          </div>
+          <el-slider v-model="guaDaoSize" :marks="guaDao1Marks" :show-tooltip="false" :min="5" :step="5"/>
         </div>
       </div>
     </div>
@@ -51,7 +41,7 @@ export default {
       currentPage: 0,
       guaDaoSize: 0,
       guaDao1Marks: {5: '指甲', 20: '硬币', 40: '起子', 70: '小刮刀', 100: '大铲子'},
-
+      guadao: 1,
     }
   },
   methods: {
@@ -64,7 +54,16 @@ export default {
       if (this.currentPage != this.chanceNum - 1) {
         this.currentPage++;
       }
-    }
+    },
+    guadao1() {
+      this.guadao = 1;
+    },
+    guadao2() {
+      this.guadao = 2;
+    },
+    guadao3() {
+      this.guadao = 3;
+    },
   }
 }
 </script>
@@ -111,13 +110,44 @@ export default {
 }
 
 .sliderDiv {
-  width: 220px;
-  height: 50px;
+  width: 200px;
+  height: 35px;
   margin-top: 10px;
   display: flex;
   align-items: center;
 }
-.el-slider__marks-text{
+
+.el-icon-guadao1 {
+  background: url('@/assets/guadao-1.png') center no-repeat;
+  background-size: cover;
+}
+
+.el-icon-guadao1:hover {
+  background: url('@/assets/guadao-1.png') center no-repeat;
+  background-size: cover;
+}
+
+.el-icon-guadao2 {
+  background: url('@/assets/guadao-2.png') center no-repeat;
+  background-size: cover;
+}
+
+.el-icon-guadao2:hover {
+  background: url('@/assets/guadao-2.png') center no-repeat;
+  background-size: cover;
+}
+
+.el-icon-guadao3 {
+  background: url('@/assets/guadao-3.png') center no-repeat;
+  background-size: cover;
+}
+
+.el-icon-guadao3:hover {
+  background: url('@/assets/guadao-3.png') center no-repeat;
+  background-size: cover;
+}
+
+.el-slider__marks-text {
   font-size: 12px;
 }
 </style>

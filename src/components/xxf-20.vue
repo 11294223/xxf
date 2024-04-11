@@ -1,10 +1,38 @@
 <template>
   <div class="body">
-    <canvas id="bottomCanvas" :width=width :height=height ref="bottomCanvas"></canvas> <!-- 底层Canvas -->
-    <canvas id="dgxCanvas" :width=width :height=height ref="dgxCanvas"></canvas> <!-- 等高线Canvas -->
-    <canvas id="munCanvas" :width=width :height=height ref="munCanvas"></canvas> <!-- 钱数Canvas -->
-    <canvas id="munPYCanvas" :width=width :height=height ref="munPYCanvas"></canvas> <!-- 钱数拼音Canvas -->
-    <canvas id="topCanvas" :width=width :height=height ref="topCanvas"></canvas> <!-- 上层Canvas -->
+    <div class="canvas">
+      <canvas id="bottomCanvas" :width=width :height=height ref="bottomCanvas"></canvas> <!-- 底层Canvas -->
+      <canvas id="dgxCanvas" :width=width :height=height ref="dgxCanvas"></canvas> <!-- 等高线Canvas -->
+      <canvas id="munCanvas" :width=width :height=height ref="munCanvas"></canvas> <!-- 钱数Canvas -->
+      <canvas id="munPYCanvas" :width=width :height=height ref="munPYCanvas"></canvas> <!-- 钱数拼音Canvas -->
+      <canvas id="topCanvas" :width=width :height=height ref="topCanvas"></canvas> <!-- 上层Canvas -->
+    </div>
+    <div class="tool">
+      <div class="choicePage">
+        <div style="margin-top: 20px;">
+          <span>选择编号：</span>
+          <div style="margin-top: 10px;">
+            <el-input-number v-model="currentPage" :min="0" step-strictly :max="chanceNum" @change="inputChange"></el-input-number>
+            <el-button type="primary" style="margin-left: 10px;">确定</el-button>
+          </div>
+        </div>
+        <div style="margin-top: 20px;">
+          <el-button type="info" @click="prePage">上一张</el-button>
+          <el-button type="info" @click="nextPage">下一张</el-button>
+        </div>
+      </div>
+      <div class="choiceTool">
+        <span style="width: 220px;">好运工具：</span>
+        <div style="margin-top: 10px;">
+          <el-button :disabled="guadao==1" bg text circle class="el-icon-guadao1" @click="guadao1"/>
+          <el-button :disabled="guadao==2" bg text circle class="el-icon-guadao2" @click="guadao2"/>
+          <el-button :disabled="guadao==3" bg text circle class="el-icon-guadao3" @click="guadao3"/>
+        </div>
+        <div class="sliderDiv">
+          <el-slider v-model="guaDaoSize" :marks="guaDao1Marks" :show-tooltip="false" :min="5" :step="5"/>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -18,6 +46,11 @@ export default {
   name: 'Xxf-20',
   data() {
     return {
+      currentPage: 0, // 当前页
+      chanceNum: 25, // 中奖机会
+      guaDaoSize: 0,
+      guaDao1Marks: {5: '指甲', 20: '硬币', 40: '起子', 70: '小刮刀', 100: '大铲子'},
+      guadao: 1,
       width: 400,
       height: 800,
       playWidth: 270,
@@ -34,30 +67,38 @@ export default {
         mun1000: [500, 500]
       }, // 金额拆分数组
       pageNum: 25, // 页数
-      currentPage: 0, // 当前页
-      chanceNum: 25, // 中奖机会
       pageArr: [], // 当前本每页的奖金数额
       iconIndexArr: [], // 图标下标数组
+      bottomCtx: null,
+      topCtx: null,
+      dgxCtx: null,
+      munCtx: null,
+      munPYCtx: null,
     }
   },
   created() {
     this.dataInit();
   },
   mounted() {
+    let bottomCanvas = this.$refs.bottomCanvas;
+    this.bottomCtx = bottomCanvas.getContext('2d');
+    let topCanvas = this.$refs.topCanvas;
+    this.topCtx = topCanvas.getContext('2d');
+    let dgxCanvas = this.$refs.dgxCanvas;
+    this.dgxCtx = dgxCanvas.getContext('2d');
+    let munCanvas = this.$refs.munCanvas;
+    this.munCtx = munCanvas.getContext('2d');
+    let munPYCanvas = this.$refs.munPYCanvas;
+    this.munPYCtx = munPYCanvas.getContext('2d');
     this.canvasInit();
+    this.drawCanvas();
   },
   methods: {
     canvasInit() {
-      let bottomCanvas = this.$refs.bottomCanvas;
-      let bottomCtx = bottomCanvas.getContext('2d');
       let topCanvas = this.$refs.topCanvas;
-      let topCtx = topCanvas.getContext('2d');
-      let dgxCanvas = this.$refs.dgxCanvas;
-      let dgxCtx = dgxCanvas.getContext('2d');
-      let munCanvas = this.$refs.munCanvas;
-      let munCtx = munCanvas.getContext('2d');
-      let munPYCanvas = this.$refs.munPYCanvas;
-      let munPYCtx = munPYCanvas.getContext('2d');
+      let topCtx = this.topCtx;
+      let munCtx = this.munCtx;
+      let munPYCtx = this.munPYCtx;
 
       //设置画布参数
       munCtx.font = '700 14px Arial';
@@ -67,6 +108,46 @@ export default {
       munPYCtx.font = '500 8px "Lucida Console", "Courier New", monospace';
       munPYCtx.textBaseline = 'top';
       munPYCtx.textAlign = "center";
+
+      let isDown = false;
+      // 鼠标按下事件
+      topCanvas.addEventListener('mousedown', () => {
+        isDown = true;
+        topCtx.globalCompositeOperation = 'destination-out';
+      });
+
+      // 鼠标松开事件
+      topCanvas.addEventListener('mouseup', () => {
+        isDown = false;
+        topCtx.globalCompositeOperation = 'source-over';
+      });
+
+      // 鼠标移动事件
+      topCanvas.addEventListener('mousemove', (event) => {
+        if (!isDown) return;
+        let x = event.offsetX;
+        let y = event.offsetY;
+        // 绘制擦除效果
+        topCtx.beginPath();
+        topCtx.arc(x, y, 10, 0, Math.PI * 2, false); // 使用圆形笔触
+        topCtx.fill();
+        topCtx.closePath();
+      });
+    },
+
+    drawCanvas(){
+      let bottomCtx = this.bottomCtx;
+      let topCtx = this.topCtx;
+      let dgxCtx = this.dgxCtx;
+      let munCtx = this.munCtx;
+      let munPYCtx = this.munPYCtx;
+
+      //清空之前内容
+      bottomCtx.clearRect(0, 0, this.width, this.height);
+      topCtx.clearRect(0, 0, this.width, this.height);
+      dgxCtx.clearRect(0, 0, this.width, this.height);
+      munCtx.clearRect(0, 0, this.width, this.height);
+      munPYCtx.clearRect(0, 0, this.width, this.height);
 
       //加载等高线
       let dgxIndex = getRandom(0, 4);
@@ -178,33 +259,7 @@ export default {
                 this.playX + 28.5 + xi * 53, this.playY + 4 + 1 * 48 + yi * 55, -0.5);
           }
         }
-
       };
-
-
-      let isDown = false;
-      // 鼠标按下事件
-      topCanvas.addEventListener('mousedown', () => {
-        isDown = true;
-        topCtx.globalCompositeOperation = 'destination-out';
-      });
-
-      // 鼠标松开事件
-      topCanvas.addEventListener('mouseup', () => {
-        isDown = false;
-      });
-
-      // 鼠标移动事件
-      topCanvas.addEventListener('mousemove', (event) => {
-        if (!isDown) return;
-        let x = event.offsetX;
-        let y = event.offsetY;
-        // 绘制擦除效果
-        topCtx.beginPath();
-        topCtx.arc(x, y, 10, 0, Math.PI * 2, false); // 使用圆形笔触
-        topCtx.fill();
-        topCtx.closePath();
-      });
     },
     dataInit() {
       let baseArr = [
@@ -275,15 +330,137 @@ export default {
       }
       this.iconIndexArr = upsetArr(this.iconIndexArr);
     },
-
+    /**
+     * 跳转到指定页
+     */
+    inputChange(){
+      this.drawCanvas();
+    },
+    /**
+     * 上一张
+     */
+    prePage() {
+      if (this.currentPage != 0) {
+        this.currentPage--;
+        this.drawCanvas();
+      }
+    },
+    /**
+     * 下一张
+     */
+    nextPage() {
+      if (this.currentPage != this.chanceNum - 1) {
+        this.currentPage++;
+        this.drawCanvas();
+      }
+    },
+    /**
+     * 第一种刮刀
+     */
+    guadao1() {
+      this.guadao = 1;
+    },
+    /**
+     * 第二种刮刀
+     */
+    guadao2() {
+      this.guadao = 2;
+    },
+    /**
+     * 第三种刮刀
+     */
+    guadao3() {
+      this.guadao = 3;
+    },
   }
 }
 </script>
 <style scoped>
 * {
   margin: 0;
-  padding: 0;
-  box-sizing: border-box;
 }
 
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.body {
+  width: 700px;
+  height: 800px;
+  display: flex;
+}
+
+.canvas {
+  width: 400px;
+  height: 800px;
+  position: relative;
+}
+
+.tool {
+  width: 250px;
+}
+
+.choicePage {
+  width: 250px;
+  height: 300px;
+  background: beige;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+}
+
+.choiceTool {
+  width: 250px;
+  height: 300px;
+  background: bisque;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+}
+
+.sliderDiv {
+  width: 200px;
+  height: 35px;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.el-icon-guadao1 {
+  background: url('@/assets/guadao-1.png') center no-repeat;
+  background-size: cover;
+}
+
+.el-icon-guadao1:hover {
+  background: url('@/assets/guadao-1.png') center no-repeat;
+  background-size: cover;
+}
+
+.el-icon-guadao2 {
+  background: url('@/assets/guadao-2.png') center no-repeat;
+  background-size: cover;
+}
+
+.el-icon-guadao2:hover {
+  background: url('@/assets/guadao-2.png') center no-repeat;
+  background-size: cover;
+}
+
+.el-icon-guadao3 {
+  background: url('@/assets/guadao-3.png') center no-repeat;
+  background-size: cover;
+}
+
+.el-icon-guadao3:hover {
+  background: url('@/assets/guadao-3.png') center no-repeat;
+  background-size: cover;
+}
+
+.el-slider__marks-text {
+  font-size: 12px;
+}
 </style>
