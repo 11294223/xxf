@@ -105,7 +105,7 @@ export function munSplit(mun, munSplitArr, maxNum, res = []) {
         res.push(mun);
         return res;
     }
-    if (getRandom(1, 3) == 1){
+    if (getRandom(1, 3) == 1) {
         res.push(mun);
         return res;
     }
@@ -122,4 +122,22 @@ export function munSplit(mun, munSplitArr, maxNum, res = []) {
         }
     }
     return res;
+}
+
+/**
+ * 前补零函数
+ * @param str 字符串
+ * @param number 需要的位数
+ */
+export function fillZero(str, number) {
+    str = String(str)
+    if (str.length < number) {
+        let sub = number - str.length;
+        for (let i = 0; i < sub; i++) {
+            str = '0' + str;
+        }
+        return str;
+    } else {
+        return str;
+    }
 }
