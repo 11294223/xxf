@@ -9,12 +9,12 @@
       <canvas id="topCanvas" :width=width :height=height ref="topCanvas"></canvas> <!-- 上层Canvas -->
     </div>
     <div class="tool">
-      <div class="winInfo">
-        <span>本次中奖金额：<h3>¥{{ munSum }}</h3></span>
-        <span>当前本中奖金额：<h3>¥{{ pageMun }}</h3></span>
-        <span>当前页中奖金额：<h3>¥{{ currentMun }}</h3></span>
-        <el-button type="primary" @click="changePage" style="margin-top: 20px;">换一本</el-button>
-      </div>
+      <!--      <div class="winInfo">-->
+      <!--        <span>本次中奖金额：<h3>¥{{ munSum }}</h3></span>-->
+      <!--        <span>当前本中奖金额：<h3>¥{{ pageMun }}</h3></span>-->
+      <!--        <span>当前页中奖金额：<h3>¥{{ currentMun }}</h3></span>-->
+      <!--        <el-button type="primary" @click="changePage" style="margin-top: 20px;">换一本</el-button>-->
+      <!--      </div>-->
       <div class="choicePage">
         <div style="margin-top: 20px;">
           <span>选择编号：</span>
@@ -107,7 +107,8 @@ export default {
     }
   },
   created() {
-    this.dataInit();
+    // this.dataInit();
+    this.probTest(5000);
   },
   mounted() {
     let bottomCanvas = this.$refs.bottomCanvas;
@@ -120,8 +121,8 @@ export default {
     this.munCtx = munCanvas.getContext('2d');
     let munPYCanvas = this.$refs.munPYCanvas;
     this.munPYCtx = munPYCanvas.getContext('2d');
-    this.canvasInit();
-    this.drawCanvas();
+    // this.canvasInit();
+    // this.drawCanvas();
   },
   methods: {
     canvasInit() {
@@ -471,16 +472,12 @@ export default {
       this.pageNumber = 'J0791-' + getRandom(22, 25) + fillZero(getRandom(0, 100), 3)
           + '-' + fillZero(getRandom(0, 10000000), 7) + '-';
 
-      //测试概率
-      // if (extPriceArr.length == 0) {
-      //   this.munSum++;
-      //   this.resetData();
-      //   this.dataInit()
-      //   return;
-      // } else {
-      //   console.log('extPrice', extPriceArr);
-      //   console.log('topPrice', topPrice);
-      // }
+      //返回数据(用于调试和概率统计)
+      return {
+        pageBaseArr: pageBaseArr,
+        extPriceArr: extPriceArr,
+        topPrice: topPrice
+      };
 
       //调试打印
       // console.log('pageBaseArr', pageBaseArr);
@@ -491,7 +488,7 @@ export default {
     /**
      * 计算奖金
      */
-    computeMun(){
+    computeMun() {
       //计算擦除率
       this.endSafeData = this.topCtx.getImageData(this.safeX, this.safeY, this.safeWidth, this.safeHeight).data;
       let erasedPixels = 0;
@@ -578,6 +575,32 @@ export default {
      */
     guadao3() {
       this.guadao = 3;
+    },
+    /**
+     * 概率测试
+     */
+    probTest(number = 100) {
+      let times200 = 0;
+      let times500 = 0;
+      let times1000 = 0;
+      let times5000 = 0;
+      let times800000 = 0;
+
+      let worker1 = new Worker(new URL('../probTest/xxf-20Worker.js', import.meta.url));
+      worker1.postMessage(5000);
+      worker1.onmessage = (res) => {
+        times200 += res.times200;
+        times500 += res.times500;
+        times1000 += res.times1000;
+        times5000 += res.times5000;
+        times800000 += res.times800000;
+      }
+
+      console.log('出现200的概率为：', times200 / number);
+      console.log('出现500的概率为：', times500 / number);
+      console.log('出现1000的概率为：', times1000 / number);
+      console.log('出现5000的概率为：', times5000 / number);
+      console.log('出现800000的概率为：', times800000 / number);
     },
   }
 }
