@@ -9,38 +9,38 @@
       <canvas id="topCanvas" :width=width :height=height ref="topCanvas"></canvas> <!-- 上层Canvas -->
     </div>
     <div class="tool">
-<!--      0.2-->
-<!--      0.08-->
-<!--      0.04-->
-<!--      0.002-->
-<!--      0.00004-->
+      <!--      0.2-->
+      <!--      0.08-->
+      <!--      0.04-->
+      <!--      0.002-->
+      <!--      0.00004-->
 
-<!--      共生成9999990本测试用例，概率如下：-->
-<!--      出现200的概率为:0.2187302%-->
-<!--      出现500的概率为:0.0893201%-->
-<!--      出现1000的概率为:0.0433700%-->
-<!--      出现5000的概率为:0.0021400%-->
-<!--      出现800000的概率为:0.0000700%-->
+      <!--      共生成9999990本测试用例，概率如下：-->
+      <!--      出现200的概率为:0.2187302%-->
+      <!--      出现500的概率为:0.0893201%-->
+      <!--      出现1000的概率为:0.0433700%-->
+      <!--      出现5000的概率为:0.0021400%-->
+      <!--      出现800000的概率为:0.0000700%-->
 
-<!--      共生成9999990本测试用例，概率如下：-->
-<!--      出现200的概率为:0.2201302%-->
-<!--      出现500的概率为:0.0892901%-->
-<!--      出现1000的概率为:0.0434700%-->
-<!--      出现5000的概率为:0.0021300%-->
-<!--      出现800000的概率为:0.0000500%-->
+      <!--      共生成9999990本测试用例，概率如下：-->
+      <!--      出现200的概率为:0.2201302%-->
+      <!--      出现500的概率为:0.0892901%-->
+      <!--      出现1000的概率为:0.0434700%-->
+      <!--      出现5000的概率为:0.0021300%-->
+      <!--      出现800000的概率为:0.0000500%-->
 
-<!--      共生成9999990本测试用例，概率如下：-->
-<!--      出现200的概率为:0.2206702%-->
-<!--      出现500的概率为:0.0892101%-->
-<!--      出现1000的概率为:0.0439800%-->
-<!--      出现5000的概率为:0.0021500%-->
-<!--      出现800000的概率为:0.0001100%-->
-      <!--      <div class="winInfo">-->
-      <!--        <span>本次中奖金额：<h3>¥{{ munSum }}</h3></span>-->
-      <!--        <span>当前本中奖金额：<h3>¥{{ pageMun }}</h3></span>-->
-      <!--        <span>当前页中奖金额：<h3>¥{{ currentMun }}</h3></span>-->
-      <!--        <el-button type="primary" @click="changePage" style="margin-top: 20px;">换一本</el-button>-->
-      <!--      </div>-->
+      <!--      共生成9999990本测试用例，概率如下：-->
+      <!--      出现200的概率为:0.2206702%-->
+      <!--      出现500的概率为:0.0892101%-->
+      <!--      出现1000的概率为:0.0439800%-->
+      <!--      出现5000的概率为:0.0021500%-->
+      <!--      出现800000的概率为:0.0001100%-->
+      <div class="winInfo">
+        <span>本次中奖金额：<h3>¥{{ munSum }}</h3></span>
+        <span>当前本中奖金额：<h3>¥{{ pageMun }}</h3></span>
+        <span>当前页中奖金额：<h3>¥{{ currentMun }}</h3></span>
+        <el-button type="primary" @click="changePage" style="margin-top: 20px;">换一本</el-button>
+      </div>
       <div class="choicePage">
         <div style="margin-top: 20px;">
           <span>选择编号：</span>
@@ -133,8 +133,7 @@ export default {
     }
   },
   created() {
-    // this.dataInit();
-    this.probTest(5000);
+    this.dataInit();
   },
   mounted() {
     let bottomCanvas = this.$refs.bottomCanvas;
@@ -147,8 +146,8 @@ export default {
     this.munCtx = munCanvas.getContext('2d');
     let munPYCanvas = this.$refs.munPYCanvas;
     this.munPYCtx = munPYCanvas.getContext('2d');
-    // this.canvasInit();
-    // this.drawCanvas();
+    this.canvasInit();
+    this.drawCanvas();
   },
   methods: {
     canvasInit() {
@@ -440,10 +439,10 @@ export default {
       let baseProb = [5, 5, 10, 10, 15, 10, 10, 20, 10, 5];
 
       let extArr = [1000, 500, 200];
-      let extProd = [10000, 4, 8, 20];
+      let extProd = [100000, 4, 8, 20];
 
       let topArr = [800000, 5000];
-      let topProb = [2500000, 1, 50];
+      let topProb = [12500000, 1, 50];
 
 
       let basePool = createFullPool(baseProb);
@@ -453,7 +452,7 @@ export default {
       let extPool = createProbPool(extProd);
       let extNumArr = [];
       let extPriceArr = [];
-      for (let i = 0; i < 8; i++) {
+      for (let i = 0; i < 2; i++) {
         extNumArr.push(getRandom(0, extProd[0]));
       }
       for (let i = 0; i < extPool.length; i++) {
@@ -497,13 +496,6 @@ export default {
       //随机生成编号
       this.pageNumber = 'J0791-' + getRandom(22, 25) + fillZero(getRandom(0, 100), 3)
           + '-' + fillZero(getRandom(0, 10000000), 7) + '-';
-
-      //返回数据(用于调试和概率统计)
-      return {
-        pageBaseArr: pageBaseArr,
-        extPriceArr: extPriceArr,
-        topPrice: topPrice
-      };
 
       //调试打印
       // console.log('pageBaseArr', pageBaseArr);
@@ -601,23 +593,6 @@ export default {
      */
     guadao3() {
       this.guadao = 3;
-    },
-    /**
-     * 概率测试
-     */
-    probTest(number = 100) {
-      let times200 = 0;
-      let times500 = 0;
-      let times1000 = 0;
-      let times5000 = 0;
-      let times800000 = 0;
-
-
-      console.log('出现200的概率为：', times200 / number);
-      console.log('出现500的概率为：', times500 / number);
-      console.log('出现1000的概率为：', times1000 / number);
-      console.log('出现5000的概率为：', times5000 / number);
-      console.log('出现800000的概率为：', times800000 / number);
     },
   }
 }

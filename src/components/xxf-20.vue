@@ -9,6 +9,32 @@
       <canvas id="topCanvas" :width=width :height=height ref="topCanvas"></canvas> <!-- 上层Canvas -->
     </div>
     <div class="tool">
+      <!--      0.2-->
+      <!--      0.08-->
+      <!--      0.04-->
+      <!--      0.002-->
+      <!--      0.00004-->
+
+      <!--      共生成9999990本测试用例，概率如下：-->
+      <!--      出现200的概率为:0.2187302%-->
+      <!--      出现500的概率为:0.0893201%-->
+      <!--      出现1000的概率为:0.0433700%-->
+      <!--      出现5000的概率为:0.0021400%-->
+      <!--      出现800000的概率为:0.0000700%-->
+
+      <!--      共生成9999990本测试用例，概率如下：-->
+      <!--      出现200的概率为:0.2201302%-->
+      <!--      出现500的概率为:0.0892901%-->
+      <!--      出现1000的概率为:0.0434700%-->
+      <!--      出现5000的概率为:0.0021300%-->
+      <!--      出现800000的概率为:0.0000500%-->
+
+      <!--      共生成9999990本测试用例，概率如下：-->
+      <!--      出现200的概率为:0.2206702%-->
+      <!--      出现500的概率为:0.0892101%-->
+      <!--      出现1000的概率为:0.0439800%-->
+      <!--      出现5000的概率为:0.0021500%-->
+      <!--      出现800000的概率为:0.0001100%-->
       <div class="winInfo">
         <span>本次中奖金额：<h3>¥{{ munSum }}</h3></span>
         <span>当前本中奖金额：<h3>¥{{ pageMun }}</h3></span>
@@ -413,10 +439,10 @@ export default {
       let baseProb = [5, 5, 10, 10, 15, 10, 10, 20, 10, 5];
 
       let extArr = [1000, 500, 200];
-      let extProd = [10000, 4, 8, 20];
+      let extProd = [100000, 4, 8, 20];
 
       let topArr = [800000, 5000];
-      let topProb = [2500000, 1, 50];
+      let topProb = [12500000, 1, 50];
 
 
       let basePool = createFullPool(baseProb);
@@ -426,7 +452,7 @@ export default {
       let extPool = createProbPool(extProd);
       let extNumArr = [];
       let extPriceArr = [];
-      for (let i = 0; i < 8; i++) {
+      for (let i = 0; i < 2; i++) {
         extNumArr.push(getRandom(0, extProd[0]));
       }
       for (let i = 0; i < extPool.length; i++) {
@@ -471,17 +497,6 @@ export default {
       this.pageNumber = 'J0791-' + getRandom(22, 25) + fillZero(getRandom(0, 100), 3)
           + '-' + fillZero(getRandom(0, 10000000), 7) + '-';
 
-      //测试概率
-      // if (extPriceArr.length == 0) {
-      //   this.munSum++;
-      //   this.resetData();
-      //   this.dataInit()
-      //   return;
-      // } else {
-      //   console.log('extPrice', extPriceArr);
-      //   console.log('topPrice', topPrice);
-      // }
-
       //调试打印
       // console.log('pageBaseArr', pageBaseArr);
       // console.log('extPrice', extPrice);
@@ -491,7 +506,7 @@ export default {
     /**
      * 计算奖金
      */
-    computeMun(){
+    computeMun() {
       //计算擦除率
       this.endSafeData = this.topCtx.getImageData(this.safeX, this.safeY, this.safeWidth, this.safeHeight).data;
       let erasedPixels = 0;
