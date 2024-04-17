@@ -10,9 +10,9 @@
     </div>
     <div class="tool">
       <div class="winInfo">
-        <!--        <span>本次中奖金额：<h3>¥{{ munSum }}</h3></span>-->
-        <!--        <span>当前本中奖金额：<h3>¥{{ pageMun }}</h3></span>-->
-        <!--        <span>当前页中奖金额：<h3>¥{{ currentMun }}</h3></span>-->
+        <span>本次中奖金额：<h3>¥{{ munSum }}</h3></span>
+        <span>当前本中奖金额：<h3>¥{{ pageMun }}</h3></span>
+        <span>当前页中奖金额：<h3>¥{{ currentMun }}</h3></span>
         <el-button type="primary" @click="changePage" style="margin-top: 20px;">换一本</el-button>
       </div>
       <div class="choicePage">
@@ -65,7 +65,7 @@ import Xxf20Exp from "@/components/xxf-20-exp.vue";
 
 export default {
   name: 'Xxf-20',
-  components:{
+  components: {
     Xxf20Exp
   },
   data() {
@@ -105,6 +105,7 @@ export default {
       hostUrl: 'xxf.yiycm.cn',
       startSafeData: [],
       endSafeData: [],
+      noSafe: false, //本页保安区已经刮开
       bottomCtx: null,
       topCtx: null,
       dgxCtx: null,
@@ -126,8 +127,8 @@ export default {
     this.munCtx = munCanvas.getContext('2d');
     let munPYCanvas = this.$refs.munPYCanvas;
     this.munPYCtx = munPYCanvas.getContext('2d');
-    // this.canvasInit();
-    // this.drawCanvas();
+    this.canvasInit();
+    this.drawCanvas();
   },
   methods: {
     canvasInit() {
@@ -499,7 +500,8 @@ export default {
       // 计算擦除率
       const totalPixels = this.safeWidth * this.safeHeight;
       const eraseRate = erasedPixels / totalPixels;
-      if (eraseRate > 0.7) {
+      if (eraseRate > 0.7 && !this.noSafe) {
+        this.noSafe = true;
         this.topCtx.fillRect(this.safeX, this.safeY, this.safeWidth, this.safeHeight);
         let tmpMun = this.pageArr[this.currentPage]
         this.currentMun = tmpMun;
@@ -521,6 +523,7 @@ export default {
       this.pageNumber = '';
       this.startSafeData = [];
       this.endSafeData = [];
+      this.noSafe = false;//保安区
     },
     /**
      * 换一本
@@ -544,6 +547,7 @@ export default {
         this.currentPage--;
         this.drawCanvas();
         this.currentMun = 0;
+        this.noSafe = false;
       }
     },
     /**
@@ -554,6 +558,7 @@ export default {
         this.currentPage++;
         this.drawCanvas();
         this.currentMun = 0;
+        this.noSafe = false;
       }
     },
     /**

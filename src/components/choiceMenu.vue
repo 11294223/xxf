@@ -2,16 +2,16 @@
   <div class="content">
     <div class="btnList">
       <router-link to="/xxf-10">
-        <el-button class="el-button" type="primary" size="large" round>xxf-10</el-button>
+        <el-button class="el-button" type="primary" size="large" round>10元面值</el-button>
       </router-link>
       <router-link to="/xxf-20">
-        <el-button class="el-button" type="success" size="large" round>xxf-20</el-button>
+        <el-button class="el-button" type="success" size="large" round>20元面值</el-button>
       </router-link>
       <router-link to="/xxf-30">
-        <el-button class="el-button" type="warning" size="large" round>xxf-30</el-button>
+        <el-button class="el-button" type="warning" size="large" round>30元面值</el-button>
       </router-link>
       <router-link to="/xxf-50">
-        <el-button class="el-button" type="danger" size="large" round>xxf-50</el-button>
+        <el-button class="el-button" type="danger" size="large" round>50元面值</el-button>
       </router-link>
     </div>
   </div>

@@ -21,7 +21,7 @@
 
 <script>
 import choiceMenu from "@/components/choiceMenu.vue";
-import Thanks from "@/components/thanks.vue";
+import Thanks from "@/components/com-thanks.vue";
 export default {
   name: 'App',
   components: {

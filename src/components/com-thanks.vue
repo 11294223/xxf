@@ -7,8 +7,7 @@
 
 声明：此项目仅供学习交流，禁止用于一切商业行为，如有不听劝告者，产生的一切后果均与本站及本人无关！！！
 
-为了保证浏览效果，建议使用1920*1080及以上分辨率，谷歌或火狐最新版浏览器浏览！
-    </pre>
+为了保证浏览效果，建议使用1920*1080及以上分辨率，谷歌或火狐最新版浏览器浏览！</pre>
     <pre style="padding: 10px 10px 0 10px">
 作者最近接触刮刮乐，觉得挺有趣的，正值票荒开始，所以有了这个项目。
 此项目为纯前端VUE项目，大量使用H5的canvas制作。
@@ -21,61 +20,59 @@
 为了收集足够量的数据，作者决定在捐赠超1000元制作10元面值，超4000元制作30元面值，超9000元制作50元面值，捐赠额及名单不定期更新在下方。
 最后感谢大家的喜爱，如果有什么问题欢迎在</pre>
     <div style="padding-left: 10px;">
-      <el-link href="">
+      <el-link type="danger" href="">
         <Link style="width: 1em; height: 1em; margin-right: 4px"/>
         GitHub
       </el-link>
       或者
-      <el-link href="">
+      <el-link type="danger" href="">
         <Link style="width: 1em; height: 1em; margin-right: 4px"/>
         Gitee
       </el-link>
     </div>
     <pre style="padding: 0 10px;">
-上提issues，或发邮件到作者邮箱  huuu12345@qq.com
-    </pre>
+上提issues，或发邮件到作者邮箱  huuu12345@qq.com</pre>
+    <p style="padding-left: 10px;">
+      感谢捐赠,捐赠者名单：
+    </p>
     <el-scrollbar ref="scrollArea" class="scroll-container" @mouseenter="stopScroll" @mouseleave="startScroll">
       <div class="scroll-content">
-        <div class="scroll-item">
-          <img :src="require('@/assets/icon/2.png')">
-          <a style="text-align: center">xiaoyu</a>
-        </div>
-        <div class="scroll-item">
-          <img :src="require('@/assets/icon/2.png')">
-          <a style="text-align: center">xiaoyu</a>
-        </div>
-        <div class="scroll-item">
-          <img :src="require('@/assets/icon/2.png')">
-          <a style="text-align: center">xiaoyu</a>
-        </div>
-        <div class="scroll-item">
-          <img :src="require('@/assets/icon/2.png')">
-          <a style="text-align: center">xiaoyu</a>
-        </div>
-        <div class="scroll-item">
-          <img :src="require('@/assets/icon/2.png')">
-          <a style="text-align: center">xiaoyu</a>
+        <div class="scroll-item" v-for="(item,index) in donors" :key="index">
+          <img :src="require('@/assets/avatar/'+item.avatar)">
+          <a style="text-align: center">{{ item.name }}</a>
         </div>
       </div>
     </el-scrollbar>
+    <p style="padding-left: 10px;">扫码捐赠，当前累计捐赠额：100元</p>
+    <div style="display: flex;padding-left: 10px;">
+      <div style="padding-right: 20px; width: 150px;display: flex;flex-wrap: wrap;align-items: center;justify-content: center;">
+        <img :src="require('@/assets/wx.jpg')" style="width: 150px;height: 150px;">
+        <p>微信</p>
+      </div>
+      <div style="width: 150px;display: flex;flex-wrap: wrap;align-items: center;justify-content: center;">
+        <img :src="require('@/assets/zfb.jpg')" style="width: 150px;height: 150px;">
+        <p>支付宝</p>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "thanks",
+  name: "com-thanks",
   data() {
     return {
       scrollArea: null,
       timer: null,
       SCROLL_SPEED: 1,
-      avatar: [],
-      name: []
+      donors: [
+          {avatar: '1.jpg', name: '小煜'},
+          {avatar: '2.jpg', name: '含倾筠'},
+      ],
     }
   },
   mounted() {
     this.scrollArea = this.$refs.scrollArea;
-    console.log(this.scrollArea.$el.querySelector('.el-scrollbar__wrap'))
     this.startScroll();
   },
   unmounted() {
@@ -129,6 +126,10 @@ pre {
   *white-space: normal;
 }
 
+.el-link {
+  --el-link-font-size: 20px;
+}
+
 .scroll-container {
   width: 100%;
   height: 100px;
@@ -136,10 +137,15 @@ pre {
 
 .scroll-content {
   padding: 0 10px;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .scroll-item {
-  width: 70px;
+  width: 90px;
+  height: 25px;
+  display: flex;
+  align-items: center;
 }
 
 .scroll-item img {

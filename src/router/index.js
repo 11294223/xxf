@@ -4,7 +4,7 @@ import {createRouter, createWebHistory, RouteRecordRaw} from "vue-router";
 const routes = [
     {
         path: "/",
-        component: () => import("../components/xxf-10.vue")
+        component: () => import("../components/xxf-20.vue")
     },
     {
         path: "/xxf-10",
