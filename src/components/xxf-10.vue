@@ -9,36 +9,10 @@
       <canvas id="topCanvas" :width=width :height=height ref="topCanvas"></canvas> <!-- 上层Canvas -->
     </div>
     <div class="tool">
-      <!--      0.2-->
-      <!--      0.08-->
-      <!--      0.04-->
-      <!--      0.002-->
-      <!--      0.00004-->
-
-      <!--      共生成9999990本测试用例，概率如下：-->
-      <!--      出现200的概率为:0.2187302%-->
-      <!--      出现500的概率为:0.0893201%-->
-      <!--      出现1000的概率为:0.0433700%-->
-      <!--      出现5000的概率为:0.0021400%-->
-      <!--      出现800000的概率为:0.0000700%-->
-
-      <!--      共生成9999990本测试用例，概率如下：-->
-      <!--      出现200的概率为:0.2201302%-->
-      <!--      出现500的概率为:0.0892901%-->
-      <!--      出现1000的概率为:0.0434700%-->
-      <!--      出现5000的概率为:0.0021300%-->
-      <!--      出现800000的概率为:0.0000500%-->
-
-      <!--      共生成9999990本测试用例，概率如下：-->
-      <!--      出现200的概率为:0.2206702%-->
-      <!--      出现500的概率为:0.0892101%-->
-      <!--      出现1000的概率为:0.0439800%-->
-      <!--      出现5000的概率为:0.0021500%-->
-      <!--      出现800000的概率为:0.0001100%-->
       <div class="winInfo">
-        <span>本次中奖金额：<h3>¥{{ munSum }}</h3></span>
-        <span>当前本中奖金额：<h3>¥{{ pageMun }}</h3></span>
-        <span>当前页中奖金额：<h3>¥{{ currentMun }}</h3></span>
+        <!--        <span>本次中奖金额：<h3>¥{{ munSum }}</h3></span>-->
+        <!--        <span>当前本中奖金额：<h3>¥{{ pageMun }}</h3></span>-->
+        <!--        <span>当前页中奖金额：<h3>¥{{ currentMun }}</h3></span>-->
         <el-button type="primary" @click="changePage" style="margin-top: 20px;">换一本</el-button>
       </div>
       <div class="choicePage">
@@ -67,6 +41,9 @@
         </div>
       </div>
     </div>
+    <div class="exp">
+      <Xxf20Exp></Xxf20Exp>
+    </div>
   </div>
 </template>
 
@@ -84,10 +61,13 @@ import {
   fillZero,
 } from '@/utils/CommonUtils'
 import JsBarcode from 'jsbarcode'
-
+import Xxf20Exp from "@/components/xxf-20-exp.vue";
 
 export default {
   name: 'Xxf-10',
+  components:{
+    Xxf20Exp
+  },
   data() {
     return {
       munSum: 0,// 本次中奖金额
@@ -146,8 +126,8 @@ export default {
     this.munCtx = munCanvas.getContext('2d');
     let munPYCanvas = this.$refs.munPYCanvas;
     this.munPYCtx = munPYCanvas.getContext('2d');
-    this.canvasInit();
-    this.drawCanvas();
+    // this.canvasInit();
+    // this.drawCanvas();
   },
   methods: {
     canvasInit() {
@@ -609,7 +589,7 @@ canvas {
 }
 
 .body {
-  width: 700px;
+  width: 1000px;
   height: 800px;
   display: flex;
 }
@@ -622,6 +602,11 @@ canvas {
 
 .tool {
   width: 250px;
+}
+
+.exp {
+  width: 350px;
+  background-color: cornsilk;
 }
 
 .winInfo {
@@ -699,5 +684,14 @@ canvas {
 
 .el-slider__marks-text {
   font-size: 12px;
+}
+
+/*兼容多个浏览器,超出换行*/
+pre {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -o-pre-wrap;
+  *word-wrap: break-word;
+  *white-space: normal;
 }
 </style>

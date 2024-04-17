@@ -4,7 +4,7 @@
       <img :src="require('@/assets/git.png')" alt="Fork me on GitHub" >
     </a>
     <el-aside style="width: 20vw;height: 100vh;">
-      card
+      <Thanks></Thanks>
     </el-aside>
     <el-main style="width: 80vw;height: 100vh;">
       <el-row>
@@ -21,11 +21,12 @@
 
 <script>
 import choiceMenu from "@/components/choiceMenu.vue";
-
+import Thanks from "@/components/thanks.vue";
 export default {
   name: 'App',
   components: {
-    choiceMenu
+    choiceMenu,
+    Thanks
   }
 }
 </script>
