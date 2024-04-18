@@ -26,4 +26,4 @@ delop:
   script:
    - cd $PROJECT_DIR
    - mv -f ./dist/ ./dist$CI_PIPELINE_CREATED_AT/
-   - mv -f /tmp/dist/ ./dist/
+   - mv -f ./tmp/dist/ ./dist/
