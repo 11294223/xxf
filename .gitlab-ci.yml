@@ -16,13 +16,14 @@ workflow:
 
 package:
   stage: build
-  script: 
+  script:
+   - npm install
    - npm run build
    - mv -f ./dist/ $PROJECT_DIR/tmp/dist/
-   
+
 delop:
   stage: deploy
-  script: 
+  script:
    - cd $PROJECT_DIR
    - mv -f ./dist/ ./dist$CI_PIPELINE_CREATED_AT/
    - mv -f /tmp/dist/ ./dist/
