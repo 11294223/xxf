@@ -20,12 +20,12 @@
 为了收集足够量的数据，作者决定在捐赠超1000元制作10元面值，超4000元制作30元面值，超9000元制作50元面值，捐赠额及名单不定期更新在下方。
 最后感谢大家的喜爱，如果有什么问题欢迎在</pre>
     <div style="padding-left: 10px;">
-      <el-link type="danger" href="">
+      <el-link type="danger" href="https://github.com/11294223/xxf/issues">
         <Link style="width: 1em; height: 1em; margin-right: 4px"/>
         GitHub
       </el-link>
       或者
-      <el-link type="danger" href="">
+      <el-link type="danger" href="https://gitee.com/hty11294223/xxf/issues">
         <Link style="width: 1em; height: 1em; margin-right: 4px"/>
         Gitee
       </el-link>
@@ -46,11 +46,11 @@
     <p style="padding-left: 10px;">扫码捐赠，当前累计捐赠额：100元</p>
     <div style="display: flex;padding-left: 10px;">
       <div style="padding-right: 20px; width: 150px;display: flex;flex-wrap: wrap;align-items: center;justify-content: center;">
-        <img :src="require('@/assets/wx.jpg')" style="width: 150px;height: 150px;">
+        <img src="http://xxf.yiycm.cn/wx.jpg" style="width: 150px;height: 150px;">
         <p>微信</p>
       </div>
       <div style="width: 150px;display: flex;flex-wrap: wrap;align-items: center;justify-content: center;">
-        <img :src="require('@/assets/zfb.jpg')" style="width: 150px;height: 150px;">
+        <img src="http://xxf.yiycm.cn/zfb.jpg" style="width: 150px;height: 150px;">
         <p>支付宝</p>
       </div>
     </div>

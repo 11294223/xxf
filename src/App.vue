@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <a class="gitHub" href="https://github.com/you">
+    <a class="gitHub" href="https://github.com/11294223/xxf/">
       <img :src="require('@/assets/git.png')" alt="Fork me on GitHub" >
     </a>
     <el-aside style="width: 20vw;height: 100vh;">
